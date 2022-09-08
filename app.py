@@ -15,7 +15,11 @@ recent_file = message_folder + '/' + 'recent.txt'
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    ip_str = str(request.environ.get('HTTP_X_REAL_IP', request.remote_addr)).replace('.', '')
+    forwarded_header = request.headers.get("X-Forwarded-For")
+    if forwarded_header:
+        ip_str = request.headers.getlist("X-Forwarded-For")[0].replace('.', '')
+    else:
+        ip_str = str(request.environ.get('HTTP_X_REAL_IP', request.remote_addr)).replace('.', '')
 
     # Create dir things that might be needed
     if not os.path.exists(message_folder):
@@ -86,7 +90,7 @@ def fetch_paste(ip_str, time_str):
 def fetch_ip(ip_str):
     ip_msg = list()
     if not os.path.exists(message_folder + '/' + ip_str):
-        return index()
+        return redirect('/')
     for file in os.listdir(message_folder + '/' + ip_str):
         ip_msg.append(ip_str + '/' + file + '.txt')
     return render_template('single_ip.html', ip_msg=ip_msg)

@@ -31,7 +31,7 @@
     </div>
     <div class="grid-item">
         <h3>Recent pastes</h3>
-        {% for value in live_queue %}
+        {% for value in recent_posts %}
             <a href="/msg/{{ value }}">{{ value }}</a><br/>
         {% endfor %}
     </div>
@@ -45,7 +45,7 @@
         <h3>Rules</h3>
         <p>When an ip exceeds 10 pastes, the oldest pastes will be deleted.</p>
         <p>Pastes might be deleted at anytime for any reason.</p>
-        <p>I reset the application once a while and everything will be lost.</p>
+        <p>I reset the application every so often and everything will be lost.</p>
         <p>512 bytes is the maximum paste length.</p>
         <p>Wait 2 minutes between each post.</p>
     </div>

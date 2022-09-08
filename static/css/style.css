@@ -1,0 +1,29 @@
+body {
+    background-color: aqua;
+}
+
+.grid-container {
+    display: grid;
+    column-gap: 50px;
+    grid-template-columns: auto auto auto;
+    background-color: dodgerblue;
+    padding: 10px;
+}
+
+.grid-item {
+    background-color: whitesmoke;
+    border: 1px solid black;
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    -moz-control-character-visibility: visible;
+}
+
+html:not([dir]) pre {
+    unicode-bidi: plaintext;
+}

@@ -39,7 +39,7 @@ def index():
         file_location = message_folder + '/' + ip_str + '/' + time_str
         recent_posts = list()
         # add to recent
-        recent_posts.append(ip_str + '/' + time_str + os.linesep)
+        recent_posts.append(ip_str + '/' + time_str + '.txt' + os.linesep)
         with open(recent_file, 'r') as f:
             for line in f.readlines():
                 if len(recent_posts) < 10:
@@ -64,7 +64,11 @@ def index():
                 recent_posts.append(post)
         ip_msg = list()
         for file in os.listdir(message_folder + '/' + ip_str):
-            ip_msg.append(ip_str + '/' + file + '.txt')
+            ip_msg.append(int(file))
+        ip_msg.sort(reverse=True)
+        finish_msg = list()
+        for msg in ip_msg:
+            finish_msg.append(ip_str + '/' + str(msg) + '.txt')
         return render_template('index.html', recent_posts=recent_posts, ip_list=ip_msg)
 
 
@@ -73,7 +77,7 @@ def fetch_paste(ip_str, time_str):
     msg_folder = message_folder + '/' + ip_str
     file_location = msg_folder + '/' + time_str[:-4]
     if not os.path.exists(msg_folder) or not os.path.exists(file_location):
-        return render_template('index.html', live_queue=live_queue)
+        return redirect('/')
     with open(file_location, 'r') as f:
         return render_template('single_paste.html', value=f.read())
 

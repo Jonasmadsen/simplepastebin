@@ -69,7 +69,7 @@ def index():
         finish_msg = list()
         for msg in ip_msg:
             finish_msg.append(ip_str + '/' + str(msg) + '.txt')
-        return render_template('index.html', recent_posts=recent_posts, ip_list=ip_msg)
+        return render_template('index.html', recent_posts=recent_posts, ip_list=finish_msg)
 
 
 @app.route('/msg/<ip_str>/<time_str>')

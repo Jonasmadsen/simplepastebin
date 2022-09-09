@@ -6,15 +6,17 @@ from flask import Flask, render_template, request, redirect
 
 app = Flask(__name__)
 
-live_queue = []
 recent_posters = list()
 max_paste_size = 512
 message_folder = 'msg'
 last_clear = datetime.datetime.now()
 recent_file = message_folder + '/' + 'recent.txt'
+min_post_interval_seconds = 5
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    global last_clear
     forwarded_header = request.headers.get("X-Forwarded-For")
     if forwarded_header:
         ip_str = request.headers.getlist("X-Forwarded-For")[0].replace('.', '')
@@ -33,11 +35,12 @@ def index():
     if request.method == 'POST':
         msg = request.form['msg']
         if len(msg) > max_paste_size:
-            return f'paste cannot exceed {max_paste_size} bytes'
-        if (datetime.datetime.now() - last_clear).seconds > 1:
+            return render_template('single_paste.html', value=f'paste cannot exceed {max_paste_size} bytes')
+        if (datetime.datetime.now() - last_clear).seconds > min_post_interval_seconds:
             recent_posters.clear()
+            last_clear = datetime.datetime.now()
         if ip_str in recent_posters:
-            return f'You posted less than 2 minutes ago. Please wait a little.'
+            return render_template('single_paste.html', value='You posted too quickly. Please wait a little.')
         recent_posters.append(ip_str)
         time_str = str(round(time.time() * 1000))
         file_location = message_folder + '/' + ip_str + '/' + time_str
@@ -49,8 +52,8 @@ def index():
                 if len(recent_posts) < 10:
                     recent_posts.append(line)
         with open(recent_file, 'w') as f:
-                for post in recent_posts:
-                    f.write(post)
+            for post in recent_posts:
+                f.write(post)
         # write the paste
         with open(file_location, 'x') as f:
             f.write(str(request.form['msg']))

@@ -7,4 +7,15 @@ This software is provided as is without any warranty. This is simply a small toy
 
 To run in prod use something similar to:
 
+sudo apt-get install authbind
+sudo touch /etc/authbind/byport/80
+sudo chmod 500 /etc/authbind/byport/80
+sudo chown USER /etc/authbind/byport/80
+
+$ cd simplepastebin
+$ python3 -m venv venv
+$ . venv/bin/activate
+$ pip install . 
+$ pip install gunicorn
+
 authbind gunicorn --certfile selfsigned.crt --keyfile selfsigned.key --bind 0.0.0.0:443 'app:app' &

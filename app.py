@@ -91,11 +91,18 @@ def get_your_posts(ip_str):
     return finish_msg
 
 
+def get_ip():
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        return request.environ['REMOTE_ADDR']
+    else:
+        return request.environ['HTTP_X_FORWARDED_FOR']
+
+
 @app.route('/', methods=['POST', 'GET'])
 def index():
     delete_all_msg_if_time()
     delete_recent_posters_if_time()
-    ip_str = str(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
+    ip_str = get_ip()
     ensure_dirs_exists(ip_str)
 
     # If you are posting to the site

@@ -20,14 +20,6 @@ last_clear_of_all_msg = datetime.datetime.now()
 clear_all_msg_interval = 600
 
 
-def get_ip():
-    forwarded_header = request.headers.get("X-Forwarded-For")
-    if forwarded_header:
-        return str(forwarded_header[0])
-    else:
-        return str(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
-
-
 def delete_all_msg_if_time():
     global last_clear_of_all_msg
     # Delete all msg if it is time
@@ -103,7 +95,7 @@ def get_your_posts(ip_str):
 def index():
     delete_all_msg_if_time()
     delete_recent_posters_if_time()
-    ip_str = get_ip()
+    ip_str = str(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
     ensure_dirs_exists(ip_str)
 
     # If you are posting to the site

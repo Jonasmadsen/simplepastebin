@@ -23,9 +23,9 @@ clear_all_msg_interval = 600
 def get_ip():
     forwarded_header = request.headers.get("X-Forwarded-For")
     if forwarded_header:
-        return forwarded_header[0].replace('.', '')
+        return str(forwarded_header[0])
     else:
-        return str(request.environ.get('HTTP_X_REAL_IP', request.remote_addr)).replace('.', '')
+        return str(request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
 
 
 def delete_all_msg_if_time():
